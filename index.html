@@ -2,7 +2,7 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!<![endif]-->
 <!-- https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json -->
 <html>
 
@@ -27,7 +27,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const obj = [...data.data]
-                    const gdpAndYearAndDate = []
+                    const gdpYearDateList = []
                     console.log(data)
 
                     var qAdder = 0
@@ -40,13 +40,19 @@
                             qAdder = 0
                         }
 
-                        pairedData.push(e[1])
-                        pairedData.push(yearAndQ)
-                        pairedData.push(e[0])
+                        let gdpYearDate = Object.create({},{
+                            gdp: {value: e[1]},
+                            year: {value: yearAndQ},
+                            date : {value:e[0]}
+                        })
 
-                        gdpAndYearAndDate.push(pairedData)
+                        
+
+                        gdpYearDateList.push(gdpYearDate)
+
 
                     })
+                    
 
 
                     function getQ(yearQ) {
@@ -69,7 +75,7 @@
                         }
                     }
 
-                    console.log(gdpAndYearAndDate)
+                    console.log(gdpYearDateList)
 
                     const padding = { top: 20, right: 20, bottom: 40, left: 50 }
                     const barWidthAndMargin = 3
@@ -78,13 +84,13 @@
 
                     const xScale = d3.scaleLinear()
                         .domain([
-                            (d3.min(gdpAndYearAndDate, (d) => d[1])),
-                            (d3.max(gdpAndYearAndDate, (d) => d[1]))
+                            (d3.min(gdpYearDateList, (d) =>  {return d.year})),
+                            (d3.max(gdpYearDateList, (d) => {return d.year}))
                         ])
                         .range([padding.left, w - padding.right - 1 * barWidthAndMargin])
 
                     const yScale = d3.scaleLinear()
-                        .domain([0, d3.max(obj, (d) => d[1])])
+                        .domain([0, d3.max(gdpYearDateList, (d) => {return d.gdp})])
                         .range([h - padding.bottom, padding.top])
 
                         const svg = d3.select(".inner")
@@ -99,6 +105,12 @@
                         .attr("border", "solid")
                         .attr("background-color", "white")
                         
+                        .style("position","absolute")
+                        .style("font-size","1rem")
+
+                    var formatDecimalComma = d3.format(",.1f");
+
+                        
 
                     var mouseover = function (d) {
                         Tooltip
@@ -108,10 +120,15 @@
                             .style("opacity", 1)
                     }
 
-                    var mousemove = function (d) {
+                    var mousemove = function (event, d) {
                         
                         Tooltip
-                             .html(`Year${d[0]}`)
+                             .html(`${d.date.substring(0,4)}
+                                    ${getQ(d.year)}<br>
+                                    $ ${formatDecimalComma(d.gdp)} billion`)
+                                    .style("left",  d3.pointer(event)[0]+ "px")
+                                    .style("top", "90px")
+                                    .attr("data-date",d.date)
                             
                     }
 
@@ -130,21 +147,23 @@
                     
 
                     svg.selectAll("rect")
-                        .data(gdpAndYearAndDate)
+                        .data(gdpYearDateList)
                         .enter()
                         .append("rect")
                         .attr("class", "bar")
-                        .attr("width", 1.4)
-                        .attr("height", (d) => h - yScale(d[0]) - padding.bottom)
+                        .attr("width", 2)
+                        .attr("height", (d) => h - yScale(d.gdp) - padding.bottom)
                         .attr("x", (d, i) => i * barWidthAndMargin + padding.left)
-                        .attr("y", (d) => yScale(d[0]))
+                        .attr("y", (d) => yScale(d.gdp))
                         .attr("fill", "red")
-                        .attr("data-date", (d) => { return `${d[2]}` })
-                        .attr("data-gdp", (d) => d[0])
+                        .attr("data-date", (d) => { return `${d.date}` })
+                        .attr("data-gdp", (d) => d.gdp)
                         .on("mouseover", mouseover)
-                        .on("mousemove", (d)=>Tooltip
-                             .html(`Year${data-gdp}`))
+                        .on("mousemove", mousemove)// RETURN HERE
                         .on("mouseleave", mouseleave)
+                        .on("click", function(event, d) {
+   console.log(d); 
+   console.log(d3.pointer(event));})
 
                     svg.append("rect") //border
                         .attr("x", 0)
@@ -168,7 +187,7 @@
                         .attr("class", "q")
  */
 
-
+                    console.log(w)
 
                     const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("d"))
                     const yAxis = d3.axisLeft(yScale)
@@ -184,7 +203,6 @@
                         .call(xAxis)
 
 
-                    console.log(obj)
 
 
                 })
@@ -224,7 +242,7 @@
     <div class="outer">
         <div class="middle">
             <div class="inner">
-                <h1 id="title">Bar Chart</h1>
+                <h1 id="title">Federal Reserve Economic Data</h1>
 
             </div>
         </div>
