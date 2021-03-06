@@ -77,7 +77,7 @@
 
                     console.log(gdpYearDateList)
 
-                    const padding = { top: 20, right: 20, bottom: 40, left: 50 }
+                    const padding = { top: 20, right: 20, bottom: 60, left: 50 }
                     const barWidthAndMargin = 3
                     const h = 500 + padding.top + padding.bottom
                     const w = obj.length * barWidthAndMargin + padding.left + padding.right
@@ -102,8 +102,9 @@
                     var Tooltip = d3.select(".inner").append("div")
                         .attr("id", "tooltip")
                         .attr("padding", "5px")
-                        .attr("border", "solid")
-                        .attr("background-color", "white")
+                        .style("border", "2px solid")
+                        .style("width", "150px")
+                        .style("background-color", "rgba(100,0,100,0.8)")
                         
                         .style("position","absolute")
                         .style("font-size","1rem")
@@ -116,8 +117,7 @@
                         Tooltip
                             .style("opacity", 1)
                         d3.select(this)
-                            .style("stroke", "red")
-                            .style("opacity", 1)
+                            .style("stroke", "maroon")
                     }
 
                     var mousemove = function (event, d) {
@@ -127,7 +127,7 @@
                                     ${getQ(d.year)}<br>
                                     $ ${formatDecimalComma(d.gdp)} billion`)
                                     .style("left",  d3.pointer(event)[0]+ "px")
-                                    .style("top", "90px")
+                                    .style("top", "500px")
                                     .attr("data-date",d.date)
                             
                     }
@@ -135,9 +135,10 @@
                     var mouseleave = function (d) {
                         Tooltip
                             .style("opacity", 0)
+                            .attr("border","0")
+
                         d3.select(this)
                             .style("stroke", "none")
-                            .style("opacity", 1)
                     }
 
 
@@ -151,7 +152,7 @@
                         .enter()
                         .append("rect")
                         .attr("class", "bar")
-                        .attr("width", 2)
+                        .attr("width", 2.3)
                         .attr("height", (d) => h - yScale(d.gdp) - padding.bottom)
                         .attr("x", (d, i) => i * barWidthAndMargin + padding.left)
                         .attr("y", (d) => yScale(d.gdp))
@@ -176,18 +177,22 @@
                         
 
 
-                    /* svg.selectAll("text.q") 
-                        .data(gdpAndYearAndDate)
-                        .enter()
-                        .append("text")
-                        .text((d) => getQ(d[1]))
-                        .attr("x", (d, i) => i * barWidthAndMargin + padding.left)
-                        .attr("y", (d) => yScale(d[0]))
-                        .attr("font-size", "2px")
-                        .attr("class", "q")
- */
+                    svg.append("text")
+                        .attr("x",580)
+                        .attr("y",567)
+                        .html("Data Source: "+'<a href='+data.display_url+' target="_blank" fill="blue">'+data.source_name+'</a>')
+                    
+                    d3.select(".inner").append("div")
+                        .style("position","absolute")
+                        .style("left","-160px")
+                        .style("top","230px")
+                        .style("width","400px")
+                        .style("height", "100px")
+                        .style("text-align","left")
+                        .style("transform","rotate(90deg)")
+                        .html("Units: Billions of Dollars")
 
-                    console.log(w)
+                    console.log(data.display_url)
 
                     const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("d"))
                     const yAxis = d3.axisLeft(yScale)
@@ -236,13 +241,26 @@
         .inner {
             margin-left: auto;
             margin-right: auto;
+            width: 895px;
+            position: relative;
         }
+        g{
+            -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+        
+        }
+
+      
     </style>
 
     <div class="outer">
         <div class="middle">
             <div class="inner">
-                <h1 id="title">Federal Reserve Economic Data</h1>
+                <h1 id="title">US Gross Domestic Product</h1>
 
             </div>
         </div>
