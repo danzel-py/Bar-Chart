@@ -20,7 +20,6 @@
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json')
@@ -40,19 +39,19 @@
                             qAdder = 0
                         }
 
-                        let gdpYearDate = Object.create({},{
-                            gdp: {value: e[1]},
-                            year: {value: yearAndQ},
-                            date : {value:e[0]}
+                        let gdpYearDate = Object.create({}, {
+                            gdp: { value: e[1] },
+                            year: { value: yearAndQ },
+                            date: { value: e[0] }
                         })
 
-                        
+
 
                         gdpYearDateList.push(gdpYearDate)
 
 
                     })
-                    
+
 
 
                     function getQ(yearQ) {
@@ -84,16 +83,16 @@
 
                     const xScale = d3.scaleLinear()
                         .domain([
-                            (d3.min(gdpYearDateList, (d) =>  {return d.year})),
-                            (d3.max(gdpYearDateList, (d) => {return d.year}))
+                            (d3.min(gdpYearDateList, (d) => { return d.year })),
+                            (d3.max(gdpYearDateList, (d) => { return d.year }))
                         ])
                         .range([padding.left, w - padding.right - 1 * barWidthAndMargin])
 
                     const yScale = d3.scaleLinear()
-                        .domain([0, d3.max(gdpYearDateList, (d) => {return d.gdp})])
+                        .domain([0, d3.max(gdpYearDateList, (d) => { return d.gdp })])
                         .range([h - padding.bottom, padding.top])
 
-                        const svg = d3.select(".inner")
+                    const svg = d3.select(".inner")
                         .append("svg")
                         .attr("width", w)
                         .attr("height", h)
@@ -105,13 +104,13 @@
                         .style("border", "2px solid")
                         .style("width", "150px")
                         .style("background-color", "rgba(100,0,100,0.8)")
-                        
-                        .style("position","absolute")
-                        .style("font-size","1rem")
+
+                        .style("position", "absolute")
+                        .style("font-size", "1rem")
 
                     var formatDecimalComma = d3.format(",.1f");
 
-                        
+
 
                     var mouseover = function (d) {
                         Tooltip
@@ -121,21 +120,21 @@
                     }
 
                     var mousemove = function (event, d) {
-                        
+
                         Tooltip
-                             .html(`${d.date.substring(0,4)}
+                            .html(`${d.date.substring(0, 4)}
                                     ${getQ(d.year)}<br>
                                     $ ${formatDecimalComma(d.gdp)} billion`)
-                                    .style("left",  d3.pointer(event)[0]+ "px")
-                                    .style("top", "500px")
-                                    .attr("data-date",d.date)
-                            
+                            .style("left", d3.pointer(event)[0] + "px")
+                            .style("top", "500px")
+                            .attr("data-date", d.date)
+
                     }
 
                     var mouseleave = function (d) {
                         Tooltip
                             .style("opacity", 0)
-                            .attr("border","0")
+                            .attr("border", "0")
 
                         d3.select(this)
                             .style("stroke", "none")
@@ -145,7 +144,7 @@
 
 
 
-                    
+
 
                     svg.selectAll("rect")
                         .data(gdpYearDateList)
@@ -162,9 +161,10 @@
                         .on("mouseover", mouseover)
                         .on("mousemove", mousemove)// RETURN HERE
                         .on("mouseleave", mouseleave)
-                        .on("click", function(event, d) {
-   console.log(d); 
-   console.log(d3.pointer(event));})
+                        .on("click", function (event, d) {
+                            console.log(d);
+                            console.log(d3.pointer(event));
+                        })
 
                     svg.append("rect") //border
                         .attr("x", 0)
@@ -174,22 +174,22 @@
                         .style("stroke", 'black')
                         .style("fill", "none")
                         .style("stroke-width", 1)
-                        
+
 
 
                     svg.append("text")
-                        .attr("x",580)
-                        .attr("y",567)
-                        .html("Data Source: "+'<a href='+data.display_url+' target="_blank" fill="blue">'+data.source_name+'</a>')
-                    
+                        .attr("x", 580)
+                        .attr("y", 567)
+                        .html("Data Source: " + '<a href=' + data.display_url + ' target="_blank" fill="blue">' + data.source_name + '</a>')
+
                     d3.select(".inner").append("div")
-                        .style("position","absolute")
-                        .style("left","-160px")
-                        .style("top","230px")
-                        .style("width","400px")
+                        .style("position", "absolute")
+                        .style("left", "-160px")
+                        .style("top", "230px")
+                        .style("width", "400px")
                         .style("height", "100px")
-                        .style("text-align","left")
-                        .style("transform","rotate(90deg)")
+                        .style("text-align", "left")
+                        .style("transform", "rotate(90deg)")
                         .html("Units: Billions of Dollars")
 
                     console.log(data.display_url)
@@ -244,17 +244,16 @@
             width: 895px;
             position: relative;
         }
-        g{
-            -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-        
-        }
 
-      
+        g {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+
+        }
     </style>
 
     <div class="outer">
